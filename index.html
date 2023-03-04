@@ -7,12 +7,17 @@
     <title>Document</title>
     <script src="https://kit.fontawesome.com/3e2b3d0dcf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js" defer></script>
 </head>
 <body class="page">
     <header class="header">
         <div class="container header__container">
-            <a href="#" class="logo"><i class="fa-solid fa-paw fa-2x"></i> Милые котики</a>
-            <button class="btn" id="add"><i class="fa-solid fa-plus"></i></button>
+            <h1><i class="fa-solid fa-paw fa-2x"></i> Милые котики</h1>
+            <div class="header-btn">
+                <button class="btn" id="add"><i class="fa-solid fa-plus"></i></button>
+                <button class="btn visual-hidden" id="login">Войти</button>
+            </div>
+            
         </div>
     </header>
     <main class="main container">
@@ -21,7 +26,8 @@
     </main>
     <footer class="footer">
         <div class="container footer__container">
-            <span class="copyright">©2022 Made by Alla</span>
+            <span class="copyright">©2023 Made by Alla</span>
+
         </div>
     </footer>
     <div class="popup popup-cat-image visual-hidden">
@@ -31,44 +37,90 @@
         </div>
     </div>
     <div class="popup popup-add visual-hidden">
-        <div class="popup__container " >
+        <div class="popup__container" >
             <button class="popup__close btn"><i class="fa-solid fa-xmark"></i></button>
             <h2>Добавить питомца</h2>
             <form class="form" id="popup-form-add">
                 <div class="form__image"></div>
                 <input type="number" class="form__input" name="id" min="1" required placeholder="id">
-                <input type="text" class="form__input" name="name" required placeholder="Имя">
                 <input type="number" class="form__input" name="age" placeholder="Возраст">
+                <input type="text" class="form__input" name="name" required placeholder="Имя">
                 <input type="number" class="form__input" name="rate" placeholder="Рейтинг (0-10)" min="0" max="10">
-                <textarea name="description" class="form__input form__textarea" placeholder="Описание Вашего котика"></textarea>
-                <input type="url" class="form__input" name="img_link" placeholder="Ссылка на фото">
+                <textarea name="description" class="form__input form__textarea " placeholder="Описание"></textarea>
                 <label class="form__checkbox-wrap">
-                    <input type="checkbox" name="favourite" class="form__checkbox" placeholder="">
+                    <input type="checkbox" name="favorite" class="form__checkbox" placeholder="">
                     <span class="form__label">Любимчик</span>  
+                    
                 </label>
+                <input type="url" class="form__input" name="image" placeholder="Ссылка на фото">
                 <button type="submit" class="form__btn btn">Добавить котика</button>
             </form>
         </div>
     </div>
-    <template id="card-template">
-        <!-- <DOCUMENT_FRAGMENT> -->
-        <div class="card">
-            <img src="#" alt="Изабражение" class="card__image">
-            <h2 class="card__name"></h2>
-            <button class="card__like visual-hidden" aria-label="Поставить лайк"><i class="fa-solid fa-heart fa-2x"></i></button>
-            <div class="all-btn-info">
-            <button type="button" data-action="open" class="btn-info btn-primary">Посмотреть</button>
-            <button type="button" data-action="edit" class="btn-info btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-            <button type="button" data-action="delete" class="btn-info btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-            </div>
+
+
+    <div class="popup popup-login visual-hidden">
+        <div class="popup__container" >
+            <button class="popup__close btn"><i class="fa-solid fa-xmark"></i></button>
+            <h2>Авторизация</h2>
+            <form class="form" id="popup-form-login">
+                <input type="email" class="form__input" name="email" required placeholder="email">
+                <input type="password" class="form__input" name="password" placeholder="password">
+                <button type="submit" class="form__btn btn">Войти</button>
+            </form>
         </div>
-        <!-- <DOCUMENT_FRAGMENT> -->
+    </div>
+
+    <div class="popup popup-cat-info visual-hidden">
+        <div class="popup__container" >
+            <button class="popup__close btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="popup__content"></div>
+           
+        </div>
+    </div>
+
+
+    <template id="card-template">
+        
+            <div class="card">
+                <img src="#" alt="Изображение" class="card__image">
+                 <h2 class="card__name"></h2>
+                 <button class="card__like cat-info_favorite card-info_favorite" aria-label="Поставить лайк"><i class="fa-solid fa-heart fa-2x"></i></button> 
+                <div class="all-btn-info">
+                <button type="button" class="btn-info btn-open">Посмотреть</button>
+                <button type="button" data-action="delete" class="btn-info btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        
     </template>
-    <script src="./src/cats.js" defer></script>
-    <script src="./src/api.js" defer></script>
-     <script src="./src/popup.js" defer></script>
-    <script src="./src/popup-image.js" defer></script>
-    <script src="./src/card.js" defer></script>
-    <script src="./src/index.js" defer></script>
+
+    <template id="cats-info-template">
+        <div class = "cat-info">
+            <button class="cat-info_edited btn-cat-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+            <button class="cat-info_saved btn-cat-info visual-hidden"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            <span class="cat-info__id"></span>
+            <img src="#" class="cat-info__image">
+           
+            <div class="cat-info__title">
+                <h2 class="cat-info__name" contentEditable="false"></h2>
+                <button class="card__like cat-info_favorite" aria-label="Поставить лайк" disabled><i class="fa-solid fa-heart fa-2x"></i></button>
+               
+            </div>
+            <div class="cat-information_short">
+                <label>Рейтинг:</label>
+                <span class="cat-info__rate cat-information" contentEditable="false"></span>
+                <label>Возраст:</label>
+                <span class="cat-info__age-val cat-information" contentEditable="false"></span>
+                 
+            </div>
+           
+                <p class="cat-info__desc" contentEditable="false"></p>
+            
+            
+        </div>
+    </template>
+
+    <script src="./src/index.js" type="module" defer></script>
+
 </body>
 </html>
